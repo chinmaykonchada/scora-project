@@ -43,8 +43,10 @@ var output = document.getElementById("output");
 //     // output.textContent = outputText;
    
 // }
+
 function saveCode() {
     const data = {
+      question: document.querySelector('#question_text').innerHTML,
       language: $("#languages").val(),
       code: editor.getSession().getValue()
     };
@@ -108,5 +110,49 @@ function saveCode() {
           console.error(error);
         });
   }
-  
+  function integrateapi(){
+    const data = {
+      question: document.querySelector('#question_text').innerHTML,
+      language: $("#languages").val(),
+      code: editor.getSession().getValue()
+    };
+    console.log(data);
+
+  // fetch('/integrate_api')
+  // .then(response => {
+  //   if (!response.ok) {
+  //     throw new Error('Error retrieving response from server');
+  //   }
+  //   return response.text();
+  // })
+  // .then(output => {
+  //   // Handle the output received from the server
+  //   console.log(output);
+  //   // Display the output in your frontend UI
+  //   document.getElementById('output').textContent = output;
+  // })
+  // .catch(error => {
+  //   console.error('Error:', error);
+  // });
+
+  fetch("/integrate_api", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)}).then(response => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error("Error saving the code");
+    })
+    .then(responseText => {
+      console.log(responseText);
+      document.getElementById('output').textContent =responseText;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
   
